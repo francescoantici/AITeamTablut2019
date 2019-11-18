@@ -25,7 +25,15 @@ class ChessBoard:
         (1,0,0,0,2,0,0,0,1),
         (0,1,1,2,2,2,1,1,0)
     )
-    MAPARRAY = None
+
+    KING = 2
+    WHITE_PAWN = 1
+    BLACK_PAWN = -1
+    CAMP = 2
+    START_WHITE = 3
+    CASTLE = 4
+    VOID = 0
+    EXIT = 1
 
     def __init__(self, initial = None):
         self.__board = initial 
