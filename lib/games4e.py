@@ -4,7 +4,7 @@ from collections import namedtuple
 import random
 import itertools
 import copy
-from utils import argmax, vector_add, MCT_Node, ucb
+from lib.utils import argmax, vector_add, MCT_Node, ucb
 
 inf = float('inf')
 GameState = namedtuple('GameState', 'to_move, utility, board, moves')

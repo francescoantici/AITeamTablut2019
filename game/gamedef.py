@@ -1,9 +1,9 @@
-import libs.games4e
+from lib.games4e import Game
 import numpy as np
 import game.State
 
 stato=np.zeros((10,9))
-class MyGame(games4e.Game):
+class MyGame(Game):
     "The state in this game would be managed as a numpy 2-D array"
     def __init__(self, state):
         self.initial = state.playboard
@@ -110,19 +110,3 @@ class MyGame(games4e.Game):
             return self.surrounded(KP,state)
     def display(self,state):
         print(state.playboard)
-
-p=np.array([[0,0,0,-1,-1,-1,0,0,0],
-            [0,0,0,0,-1,0,0,0,0],
-            [0,0,0,0,1,0,0,0,0],
-            [-1,0,0,0,1,0,0,0,-1],
-            [-1,-1,1,1,2,1,1,-1,-1],
-            [-1,0,0,0,1,0,0,0,-1],
-            [0,0,0,0,1,0,0,0,0],
-            [0,0,0,0,-1,0,0,0,0],
-            [0,0,0,-1,-1,-1,0,0,0]])
-s=State.State(p)
-g=MyGame(s)
-
-
-
-
