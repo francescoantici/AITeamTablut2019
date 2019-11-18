@@ -1,15 +1,17 @@
 from game.TablutAshtonGame import TablutAshtonGame
 from game.State import State
 from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
+from players.MyPlayer import MyPlayer
 from sym.GameSym import GameSym
 from ptvsd import enable_attach
+
 
 #debug vs code
 enable_attach(address=('localhost', 5678))
 
 
-white = RandomWhitePlayer()
-black = RandomBlackPlayer()
+white = MyPlayer()
+black = MyPlayer()
 
 sym = GameSym(white, black)
 
