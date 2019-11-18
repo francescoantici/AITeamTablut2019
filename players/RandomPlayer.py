@@ -6,7 +6,7 @@ class RandomPlayer(Player):
         super().__init__(isWhite, False)
     
     def move(self, game, chessboard, opponent):
-        elSign = 1 if self.__isWhite else -1
+        elSign = 1 if self.isWhite() else -1
         act = []
         for row in chessboard:
             for pawn in row:
