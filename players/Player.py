@@ -33,10 +33,14 @@ class Player:
                 else:
                     for k in range(9):
                         #check if the poition is valid by avoiding considering moves into camps, other checkers position and the starting one
-                        if game.checkMove((i,j), (k,j)): 
+                        try:
+                            game.checkMove((i,j), (k,j))
                             L.append(((i,j), (k,j)))
-                        if game.checkMove((i,j), (i,k)):
+                        except: pass
+                        try:
+                            game.checkMove((i,j), (i,k))
                             L.append(((i,j),(i,k)))
+                        except: pass
         return L
 
     def black_actions(self, game, chessboard):
@@ -51,8 +55,12 @@ class Player:
                 else:
                     for k in range(9):
                         #check if the poition is valid by avoiding considering moves into camps, other checkers position and the starting one
-                        if game.checkMove((i,j), (k,j)): 
+                        try: 
+                            game.checkMove((i,j), (k,j))
                             L.append(((i,j), (k,j)))
-                        if game.checkMove((i,j), (i,k)):
+                        except: pass
+                        try:
+                            game.checkMove((i,j), (i,k))
                             L.append(((i,j),(i,k)))
+                        except: pass
         return L

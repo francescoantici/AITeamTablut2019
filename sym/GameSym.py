@@ -29,6 +29,10 @@ class GameSym:
         if player.human() and self.__gui: return self
         move = None
         try: move = player.play(self.__game, opponent)
+        except MoveError as ex:
+            player.onError('move', ex)
+            if self.__verbose: print("ERRORE NEL CALCOLO DELLA MOSSA: ", ex, ex.__class__.__name__);
+            return self
         except Exception as ex:
             player.onError('calculation', ex)
             if self.__verbose: print("ERRORE NEL CALCOLO MOSSA: ", ex)

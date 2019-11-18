@@ -1,5 +1,5 @@
 from game.ChessBoard import ChessBoard
-from game.Errors import WonGameMove
+from game.Errors import WonGameMove, OutOfBoardMove
 import numpy as np
 
 class TablutGame:
@@ -14,10 +14,13 @@ class TablutGame:
     def getTurn(self): return self.turn
     def getPawn(self, x, y): return self.chessboard.get(x, y)
     def getWinner(self): return self.won
-    def clone(self): return self.__class__(self.getBoard())
     def __str__(self): return str(self.__chessboard)
+    def clone(self, turn = 0):
+        result = self.__class__(self.getBoard())
+        result.turn = turn
+        return result
 
-    def result(self, start, end): return self.clone().move(start, end)
+    def result(self, start, end, turn = 0): return self.clone(turn).move(start, end)
 
     def move(self, start, end):
         if self.won: raise WonGameMove(start, end)

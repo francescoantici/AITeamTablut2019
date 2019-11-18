@@ -2,16 +2,18 @@ from game.TablutAshtonGame import TablutAshtonGame
 from game.State import State
 from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
 from players.MyPlayer import MyPlayer
+from players.HumanPlayer import HumanPlayer
 from sym.GameSym import GameSym
-from ptvsd import enable_attach
+from ptvsd import enable_attach, wait_for_attach
 
 
-#debug vs code
+# debug vs code
 enable_attach(address=('localhost', 5678))
+# attendi debugger
 
 
-white = MyPlayer()
-black = MyPlayer()
+white = MyPlayer(True)
+black = MyPlayer(False)
 
 sym = GameSym(white, black)
 
