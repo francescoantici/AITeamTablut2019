@@ -9,9 +9,9 @@ class MyPlayer(Player):
 
         
     def euristic(self,chessboard):
-        return np.rand.uniform(0,1)
+        return np.random.uniform(0,1)
 
-    def alphabeta_cutoff(game,opponent, d=4, cutoff_test=None):
+    def alphabeta_cutoff(self,game,opponent, d=4, cutoff_test=None):
         """Search game to determine best action; use alpha-beta pruning.
         This version cuts off search and uses an evaluation function."""
 
