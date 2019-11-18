@@ -35,6 +35,8 @@ class ChessBoard:
     VOID = 0
     EXIT = 1
 
+    EXIT_INDICES = ((0, 1),(0, 2),(0, 6),(0, 7),(1, 0),(1, 8),(2, 0),(2, 8),(6, 0),(6, 8),(7, 0),(7, 8),(8, 1),(8, 2),(8, 6),(8, 7))
+    
     def __init__(self, initial = None):
         self.__board = initial 
         if self.__board is None: self.__board = np.array(ChessBoard.INITIAL, dtype='byte')
