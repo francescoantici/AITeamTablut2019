@@ -1,9 +1,10 @@
 from game.ChessBoard import ChessBoard
+from game.Errors import WonGameMove
 import numpy as np
 
 class TablutGame:
     def __init__(self, initial = None):
-        self.chessboard = ChessBoard()
+        self.chessboard = ChessBoard(initial)
         self.turn = 0
         self.won = 0
 

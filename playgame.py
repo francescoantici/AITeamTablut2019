@@ -1,15 +1,21 @@
-from game.gamedef import MyGame
+from game.TablutAshtonGame import TablutAshtonGame
+from game.State import State
+from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
+from sym.GameSym import GameSym
+from ptvsd import enable_attach
 
-game = MyGame()
+#debug vs code
+enable_attach(address=('localhost', 5678))
 
-# p=np.array([[0,0,0,-1,-1,-1,0,0,0],
-#             [0,0,0,0,-1,0,0,0,0],
-#             [0,0,0,0,1,0,0,0,0],
-#             [-1,0,0,0,1,0,0,0,-1],
-#             [-1,-1,1,1,2,1,1,-1,-1],
-#             [-1,0,0,0,1,0,0,0,-1],
-#             [0,0,0,0,1,0,0,0,0],
-#             [0,0,0,0,-1,0,0,0,0],
-#             [0,0,0,-1,-1,-1,0,0,0]])
-# s=State.State(p)
-# g=MyGame(s)
+
+white = RandomWhitePlayer()
+black = RandomBlackPlayer()
+
+sym = GameSym(white, black)
+
+sym.enableGui()
+
+x = True
+while x:
+    sym.start()
+    x = input('Giocare ancora? (y/n) ').lower() == 'y'

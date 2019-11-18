@@ -8,7 +8,7 @@ class RandomPlayer(Player):
     
     def isWhite(self): return self.__isWhite
 
-    def play(self, chessboard):
+    def move(self, game, chessboard):
         elSign = 1 if self.__isWhite else -1
         act = []
         for row in chessboard:

@@ -6,9 +6,14 @@ class Pawn:
         self.y = y
 
         self.white = self.value > 0
-        self.black = not self.white
+        self.black = self.value < 0
         self.king = self.value == 2
+
+        self.empty = self.value == 0
+        self.occupied = not self.empty
+
 
         self.camp = self.map == 2
         self.king = self.map == 4
+        self.escape = self.map == 1
         self.block = self.camp or self.king

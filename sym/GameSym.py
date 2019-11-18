@@ -27,7 +27,7 @@ class GameSym:
         player = self.__players[turn]
         if player.human() and self.__gui: return self
         move = None
-        try: move = player.play(self.__game.getPawnBoard())
+        try: move = player.play(self.__game)
         except Exception as ex:
             player.onError('calculation', ex)
             if self.__verbose: print("ERRORE NEL CALCOLO MOSSA: ", ex)
