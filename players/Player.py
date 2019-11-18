@@ -12,8 +12,9 @@ class Player:
     def onWin(self, winner, moves): print(winner, moves); return self
     def onError(self, type, error): return self
 
-    def actions(self, game, chessboard):
+    def actions(self, game, chessboard = None):
         L=[]
+        if not chessboard: chessboard = game.getPawnBoard()
         if self.__isWhite:
             L = self.white_actions(game, chessboard)
         else:
