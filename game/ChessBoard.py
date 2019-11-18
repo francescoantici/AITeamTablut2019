@@ -29,7 +29,7 @@ class ChessBoard:
 
     def __init__(self, initial = None):
         self.__board = initial 
-        if not self.__board: self.board = np.array(ChessBoard.INITIAL, dtype='byte')
+        if self.__board is None: self.__board = np.array(ChessBoard.INITIAL, dtype='byte')
         self.__index = [0, 0]
             
 
