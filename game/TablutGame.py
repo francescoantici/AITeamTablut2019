@@ -14,6 +14,8 @@ class TablutGame:
     def getTurn(self): return self.turn
     def getPawn(self, x, y): return self.chessboard.get(x, y)
     def getWinner(self): return self.won
+    def clone(self): return self.__class__(self.getBoard())
+    def __str__(self): return str(self.__chessboard)
 
     def move(self, start, end):
         if self.won: raise WonGameMove(start, end)
@@ -150,6 +152,3 @@ class TablutGame:
             if x == -1 and a in occ or  y == -1 and b in occ:
                 return False
         return True
-
-    def __str__(self):
-        return str(self.__chessboard)

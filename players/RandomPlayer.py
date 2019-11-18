@@ -3,11 +3,8 @@ import numpy as np
 
 class RandomPlayer(Player):
     def __init__(self, isWhite = False):
-        super().__init__()
-        self.__isWhite = isWhite
+        super().__init__(isWhite, False)
     
-    def isWhite(self): return self.__isWhite
-
     def move(self, game, chessboard):
         elSign = 1 if self.__isWhite else -1
         act = []
