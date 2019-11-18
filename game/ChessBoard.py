@@ -28,7 +28,8 @@ class ChessBoard:
     MAPARRAY = None
 
     def __init__(self, initial = None):
-        self.__board = initial or np.array(ChessBoard.INITIAL, dtype='byte')
+        self.__board = initial 
+        if not self.__board: self.board = np.array(ChessBoard.INITIAL, dtype='byte')
         self.__index = [0, 0]
             
 
