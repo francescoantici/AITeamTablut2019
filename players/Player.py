@@ -7,9 +7,8 @@ class Player:
 
     def isWhite(self): return self.__isWhite
     def human(self): return self.__human
-    def play(self, game): return self.move(game, game.getPawnBoard())
-    def move(self, game, chessboard): raise NotImplementedError
-
+    def play(self, game, opponent): return self.move(game, game.getPawnBoard(), opponent)
+    def move(self, game, chessboard, opponent): raise NotImplementedError
     def onWin(self, winner, moves): print(winner, moves); return self
     def onError(self, type, error): return self
 

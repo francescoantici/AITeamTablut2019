@@ -2,7 +2,7 @@ from players.Player import Player
 
 class HumanPlayer(Player):
     def __init__(self): super().__init__(True)
-    def play(self, chessboard):
+    def play(self, game, chessboard, players):
         return (
             (
                 int(input('START x: ')),

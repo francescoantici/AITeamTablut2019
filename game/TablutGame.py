@@ -17,6 +17,8 @@ class TablutGame:
     def clone(self): return self.__class__(self.getBoard())
     def __str__(self): return str(self.__chessboard)
 
+    def result(self, start, end): return self.clone().move(start, end)
+
     def move(self, start, end):
         if self.won: raise WonGameMove(start, end)
 
@@ -53,13 +55,23 @@ class TablutGame:
             self.checkEat(x, y + 1)
         ]
 
-        if 2 in eats: self.win(-1)
+        winner = self.checkWin(self)
+        if winner: return self.win(winner)
+
+        return self
+    
+    def checkWin(self):
+
+        kingpos = np.where(self.getBoard() == 2)
+
+        kingEat = self.checkEat(kingpos[0][0], kingpos[1][0], False)
+        if kingEat == 2: return -1
         
         map = self.getBoard()
         filterMap = ChessBoard.MAPARRAY == 1
         boardMap = map[filterMap]
         kingMap = (boardMap == 2)
-        if kingMap.any(): self.win(1)
+        if kingMap.any(): return 1
 
         wCan = False
         bCan = False
@@ -69,10 +81,10 @@ class TablutGame:
             elif e > 0 and not wCan: wCan = self.canMove(i, j)
             elif e < 0 and not bCan: bCan = self.canMove(i, j)
 
-        if not wCan: self.win(-1)
-        elif not bCan: self.win(1)
+        if not wCan: return -1
+        elif not bCan: return 1
 
-        return self
+        return 0
 
     def canMove(self, x, y):
         nocc = (2, 4)
@@ -91,7 +103,7 @@ class TablutGame:
         neight = [ eneight[i] or mneight[i] in nocc for i in range(4) ]
         return False in neight
 
-    def checkEat(self, x, y):
+    def checkEat(self, x, y, eat = True):
         if x < 0 or y < 0 or x > 8 or y > 8: return 0
         current = self.chessboard.get(x, y)
         if not current: return 0
@@ -118,7 +130,7 @@ class TablutGame:
         hSupp = neight[2] and neight[3]
         if not isKing:
             if vSupp or hSupp:
-                self.eat(x, y)
+                if eat: self.eat(x, y)
                 return current
         else:
             isNearCastle = 4 in mneight

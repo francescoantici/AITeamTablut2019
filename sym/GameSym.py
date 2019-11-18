@@ -25,9 +25,10 @@ class GameSym:
     def __play(self):
         turn = self.__game.getTurn()
         player = self.__players[turn]
+        opponent = self.__players[(turn+1)%2]
         if player.human() and self.__gui: return self
         move = None
-        try: move = player.play(self.__game)
+        try: move = player.play(self.__game, opponent)
         except Exception as ex:
             player.onError('calculation', ex)
             if self.__verbose: print("ERRORE NEL CALCOLO MOSSA: ", ex)

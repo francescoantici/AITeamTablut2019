@@ -5,7 +5,7 @@ class RandomPlayer(Player):
     def __init__(self, isWhite = False):
         super().__init__(isWhite, False)
     
-    def move(self, game, chessboard):
+    def move(self, game, chessboard, opponent):
         elSign = 1 if self.__isWhite else -1
         act = []
         for row in chessboard:
