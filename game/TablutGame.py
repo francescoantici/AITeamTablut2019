@@ -55,7 +55,7 @@ class TablutGame:
             self.checkEat(x, y + 1)
         ]
 
-        winner = self.checkWin(self)
+        winner = self.checkWin()
         if winner: return self.win(winner)
 
         return self
