@@ -2,11 +2,7 @@ from game.TablutGame import TablutGame
 from game.Errors import *
 
 class TablutAshtonGame(TablutGame):
-    def move(self, start, end):
-        if self.won: raise WonGameMove(start, end)
-
-        if start[0] < 0 or start[1] < 0 or end[0] < 0 or end[1] < 0 or start[0] > 8 or start[1] > 8 or end[0] > 8 or end[1] > 8: raise OutOfBoardMove(start, end)
-
+    def checkMove(self, start, end):
         s = self.chessboard.get(*start)
         e = self.chessboard.get(*end)
 
@@ -29,12 +25,5 @@ class TablutAshtonGame(TablutGame):
         elif (start[0] != end[0] and not self.checkRange(start[0], end[0], -1, start[1])) or (start[1] != end[1] and not self.checkRange(start[1], end[1], start[0], -1)): raise PassThroughMove(start, end)
         #mossa attraverso un castello o un campo
         elif (start[0] != end[0] and not self.checkRangeMap(start[0], end[0], -1, start[1], sm)) or (start[1] != end[1] and not self.checkRangeMap(start[1], end[1], start[0], -1, sm)): raise PassThroughBlockMove(start, end)
-
-        self.chessboard.set(start[0], start[1], 0)
-        self.chessboard.set(end[0], end[1], s)
-
-        self.checkEatAndWin(*end)
-
-        self.turn += 1
-        self.turn %= 2
+        
         return self

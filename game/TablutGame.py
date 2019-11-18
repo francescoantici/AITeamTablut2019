@@ -14,7 +14,24 @@ class TablutGame:
     def getPawn(self, x, y): return self.chessboard.get(x, y)
     def getWinner(self): return self.won
 
-    def move(self, start, end): raise NotImplementedError
+    def move(self, start, end):
+        if self.won: raise WonGameMove(start, end)
+
+        if start[0] < 0 or start[1] < 0 or end[0] < 0 or end[1] < 0 or start[0] > 8 or start[1] > 8 or end[0] > 8 or end[1] > 8: raise OutOfBoardMove(start, end)
+
+        self.checkMove(start, end)
+        s = self.chessboard.get(*start)
+
+        self.chessboard.set(start[0], start[1], 0)
+        self.chessboard.set(end[0], end[1], s)
+
+        self.checkEatAndWin(*end)
+
+        self.turn += 1
+        self.turn %= 2
+        return self
+
+    def checkMove(self, start, end): raise NotImplementedError
 
     def win(self, player):
         self.won = player

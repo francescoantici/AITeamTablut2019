@@ -1,8 +1,6 @@
-import sys
-sys.path.append("/Users/francesco/Documents/Fundamentals/tablut/Tablut2019/lib")
-import games4e
+import libs.games4e
 import numpy as np
-import State
+import game.State
 
 stato=np.zeros((10,9))
 class MyGame(games4e.Game):
