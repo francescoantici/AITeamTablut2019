@@ -1,5 +1,4 @@
 from game.TablutAshtonGame import TablutAshtonGame
-from game.State import State
 from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
 from players.alphabeta.PlayerWhite import PlayerWhite
 from players.alphabeta.PlayerBlack import PlayerBlack
@@ -13,7 +12,8 @@ enable_attach(address=('localhost', 5678))
 # attendi debugger
 
 
-white = PlayerWhite(2)
+# white = PlayerWhite(2)
+white = HumanPlayer(True)
 black = HumanPlayer(False)
 
 sym = GameSym(white, black)

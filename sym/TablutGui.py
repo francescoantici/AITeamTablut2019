@@ -1,5 +1,6 @@
 import tkinter
 from PIL import Image, ImageTk
+from game.ChessBoard import ChessBoard
 
 class TablutGui:
     RESOURCES_STRING = {
@@ -13,8 +14,8 @@ class TablutGui:
         'king': 'king.png',
         'selection': 'selection.png'
     }
-    RESOURCE_PAWN = { -1: 'black', 1: 'white', 2: 'king' }
-    RESOURCE_MAP = ('cell', 'escape', 'camp', 'startCell', 'castle')
+    RESOURCE_PAWN = { ChessBoard.BLACK_PAWN: 'black', ChessBoard.WHITE_PAWN: 'white', ChessBoard.KING: 'king' }
+    RESOURCE_MAP = { ChessBoard.VOID: 'cell', ChessBoard.EXIT: 'escape', ChessBoard.CAMP: 'camp', ChessBoard.START_WHITE: 'startCell', ChessBoard.CASTLE: 'castle' }
 
     def __init__(self):
         self.__callbacks = {}
@@ -56,11 +57,15 @@ class TablutGui:
         return self
 
     def drawTable(self, chessboard):
+        for i in range(9):
+            ci = i * 50 + 50
+            self.__canvas.create_text(ci, 12, text = str(i), font="Times 20", fill='white')
+            self.__canvas.create_text(12, ci, text = str(i), font="Times 20", fill='white')
         for e, m, i, j in chessboard:
             ci = i * 50 + 50
             cj = j * 50 + 50
             self.__canvas.create_image(ci, cj, image = self.__getImageMap(m))
-            if e != 0: self.__canvas.create_image(ci, cj, image = self.__getImagePawn(e))
+            if e != ChessBoard.VOID: self.__canvas.create_image(ci, cj, image = self.__getImagePawn(e))
         return self
 
     def drawTurn(self, turn):
@@ -68,7 +73,7 @@ class TablutGui:
         return self
 
     def drawWin(self, winner):
-        self.__canvas.create_image(490, 490, image = self.__winImages[winner])
+        self.__canvas.create_image(490, 490, image = self.__winImages[ChessBoard.PLAYERS_INDICES[winner]])
         return self
 
     def drawSelection(self, x, y):

@@ -1,5 +1,7 @@
+from game.ChessBoard import ChessBoard
 from game.TablutGame import TablutGame
 from game.Errors import *
+import numpy as np
 
 class TablutAshtonGame(TablutGame):
     def checkMove(self, start, end):
@@ -10,15 +12,15 @@ class TablutAshtonGame(TablutGame):
         em = self.chessboard.getMap(*end)
 
         #presa pedina vuota
-        if s == 0: raise EmptyMove(start, end)
+        if s == ChessBoard.VOID: raise EmptyMove(start, end)
         #mossa pedina in posto occupato
-        elif e != 0: raise OccupyMove(start, end)
+        elif e != ChessBoard.VOID: raise OccupyMove(start, end)
         #mossa sul castello
-        elif em == 4: raise CastleMove(start, end)
+        elif em == ChessBoard.CASTLE: raise CastleMove(start, end)
         #mossa su un campo
-        elif sm != 2 and em == 2: raise CitadelMove(start, end)
+        elif sm != ChessBoard.CAMP and em == ChessBoard.CAMP: raise CitadelMove(start, end)
         #mossa pedina avversaria
-        elif (self.turn and s > 0) or (not self.turn and s < 0): raise WrongPawnMove(start, end)
+        elif np.sign(self.turn) != np.sign(s): raise WrongPawnMove(start, end)
         #mossa pedina in diagonale
         elif start[0] != end[0] and start[1] != end[1]: raise DiagonalMove(start, end)
         #mossa attraverso un'altra pedina

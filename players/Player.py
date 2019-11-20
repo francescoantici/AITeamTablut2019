@@ -1,5 +1,3 @@
-from game.State import State
-
 class Player:
     def __init__(self, isWhite = False, human = False):
         self.__human = human

@@ -16,11 +16,11 @@ class AlphaBetaPlayer(Player):
     #FUNZIONE EURISTICA -> MOSSA + CONVENIENTE HA IL PUNTEGGIO MAGGIORE
     def euristic(self, chessboard, move, depth): raise NotImplementedError
 
-    def cutoff(self, state, depth):
-        return depth > self.depth or state.checkWin()
+    def cutoff(self, state, depth, move):
+        return depth > self.depth or state.checkWin(move)
     
     def max_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove):
-        if self.cutoff(state, depth):
+        if self.cutoff(state, depth, currentMove):
             return opponent.euristic(state, currentMove, depth) if hasattr(opponent, 'euristic') else inf
         v = -inf
         L = self.actions(state)
@@ -33,7 +33,7 @@ class AlphaBetaPlayer(Player):
         return v
 
     def min_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove):
-        if self.cutoff(state, depth):
+        if self.cutoff(state, depth, currentMove):
             return self.euristic(state, currentMove, depth)
         v = inf
         L = opponent.actions(state)

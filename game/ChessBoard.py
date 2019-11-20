@@ -26,23 +26,33 @@ class ChessBoard:
         (0,1,1,2,2,2,1,1,0)
     )
 
+    MIN = 0
+    MAX = 8
+
     KING = 2
     WHITE_PAWN = 1
     BLACK_PAWN = -1
+
+    VOID = 0
+    EXIT = 1
     CAMP = 2
     START_WHITE = 3
     CASTLE = 4
-    VOID = 0
-    EXIT = 1
     WALLS = (2, 4)
-
+    
     EXIT_INDICES = ((0, 1),(0, 2),(0, 6),(0, 7),(1, 0),(1, 8),(2, 0),(2, 8),(6, 0),(6, 8),(7, 0),(7, 8),(8, 1),(8, 2),(8, 6),(8, 7))
+
+    WHITE_PLAYER = 1
+    BLACK_PLAYER = -1
+    NOBODY_PLAYER = 0
+    PLAYERS = { 1: 'WHITE', -1: 'BLACK'}
+    PLAYERS_INDICES = { 1: 0, -1: 1 }
+
     
     def __init__(self, initial = None):
         self.__board = initial 
         if self.__board is None: self.__board = np.array(ChessBoard.INITIAL, dtype='byte')
         self.__index = [0, 0]
-            
 
     def get(self, x, y): return self.__board[x, y]
     def set(self, x, y, value): self.__board[x, y] = value; return self

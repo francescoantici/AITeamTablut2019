@@ -5,8 +5,8 @@ import numpy as np
 class TablutGame:
     def __init__(self, initial = None):
         self.chessboard = ChessBoard(initial)
-        self.turn = 0
-        self.won = 0
+        self.turn = ChessBoard.WHITE_PLAYER
+        self.won = ChessBoard.NOBODY_PLAYER
 
     def getBoard(self): return self.chessboard.copyArray()
     def getPawnBoard(self): return self.chessboard.getBoard()
@@ -31,13 +31,12 @@ class TablutGame:
         if checkMove: self.checkMove(start, end)
         s = self.chessboard.get(*start)
 
-        self.chessboard.set(start[0], start[1], 0)
+        self.chessboard.set(start[0], start[1], ChessBoard.VOID)
         self.chessboard.set(end[0], end[1], s)
 
-        self.checkEatAndWin(*end)
+        self.checkEatAndWin(start, end)
 
-        self.turn += 1
-        self.turn %= 2
+        self.turn = -self.turn
         return self
 
     def checkMove(self, start, end): raise NotImplementedError
@@ -47,35 +46,37 @@ class TablutGame:
         return self
 
     def eat(self, x, y):
-        self.chessboard.set(x, y, 0)
+        self.chessboard.set(x, y, ChessBoard.VOID)
         return self
 
-    def checkEatAndWin(self, x, y):
+    def checkEatAndWin(self, start, end):
+        move = (start, end)
+
+        winner = self.checkWin(move)
 
         eats = [
-            self.checkEat(x - 1, y),
-            self.checkEat(x + 1, y),
-            self.checkEat(x, y - 1),
-            self.checkEat(x, y + 1)
+            self.checkEat(*end, end[0] - 1, end[1]),
+            self.checkEat(*end, end[0] + 1, end[1]),
+            self.checkEat(*end, end[0], end[1] - 1),
+            self.checkEat(*end, end[0], end[1] + 1)
         ]
 
-        winner = self.checkWin()
         if winner: return self.win(winner)
 
         return self
     
-    def checkWin(self):
+    def checkWin(self, move):
+        end = move[1]
+        kingpos = np.where(self.getBoard() == ChessBoard.KING)
 
-        kingpos = np.where(self.getBoard() == 2)
-
-        kingEat = self.checkEat(kingpos[0][0], kingpos[1][0], False)
-        if kingEat == 2: return -1
+        kingEat = self.checkEat(*end, kingpos[0][0], kingpos[1][0], False)
+        if kingEat == ChessBoard.KING: return ChessBoard.BLACK_PLAYER
         
         map = self.getBoard()
-        filterMap = ChessBoard.MAPARRAY == 1
+        filterMap = ChessBoard.MAPARRAY == ChessBoard.EXIT
         boardMap = map[filterMap]
-        kingMap = (boardMap == 2)
-        if kingMap.any(): return 1
+        kingMap = (boardMap == ChessBoard.KING)
+        if kingMap.any(): return ChessBoard.WHITE_PLAYER
 
         wCan = False
         bCan = False
@@ -85,13 +86,12 @@ class TablutGame:
             elif e > 0 and not wCan: wCan = self.canMove(i, j)
             elif e < 0 and not bCan: bCan = self.canMove(i, j)
 
-        if not wCan: return -1
-        elif not bCan: return 1
+        if not wCan: return ChessBoard.BLACK_PLAYER
+        elif not bCan: return ChessBoard.WHITE_PLAYER
 
-        return 0
+        return ChessBoard.NOBODY_PLAYER
 
     def canMove(self, x, y):
-        nocc = (2, 4)
         eneight = [
             5 if x < 1 else self.chessboard.get(x - 1, y),
             5 if x > 7 else self.chessboard.get(x + 1, y),
@@ -104,43 +104,55 @@ class TablutGame:
             5 if y < 1 else self.chessboard.getMap(x, y - 1),
             5 if y > 7 else self.chessboard.getMap(x, y + 1)
         ]
-        neight = [ eneight[i] or mneight[i] in nocc for i in range(4) ]
+        neight = [ eneight[i] or mneight[i] in ChessBoard.WALLS for i in range(4) ]
         return False in neight
 
-    def checkEat(self, x, y, eat = True):
-        if x < 0 or y < 0 or x > 8 or y > 8: return 0
-        current = self.chessboard.get(x, y)
-        if not current: return 0
+    def checkEat(self, mx, my, cx, cy, eat = True):
+        if mx < 0 or my < 0 or mx > 8 or my > 8: raise Exception("Checking eat out of board")
+        if cx < 0 or cy < 0 or cx > 8 or cy > 8: return ChessBoard.VOID
+        
+        vCheck = my == cy
+        hCheck = mx == cx
+
+        if vCheck and hCheck: return ChessBoard.VOID
+
+        current = self.chessboard.get(cx, cy)
+        if current == ChessBoard.VOID: return ChessBoard.VOID
+
         elSign = np.sign(current)
-        nocc = (2, 4)
 
         eneight = [
-            0 if x < 1 else self.chessboard.get(x - 1, y),
-            0 if x > 7 else self.chessboard.get(x + 1, y),
-            0 if y < 1 else self.chessboard.get(x, y - 1),
-            0 if y > 7 else self.chessboard.get(x, y + 1)
+            0 if cx < 1 else self.chessboard.get(cx - 1, cy),
+            0 if cx > 7 else self.chessboard.get(cx + 1, cy),
+            0 if cy < 1 else self.chessboard.get(cx, cy - 1),
+            0 if cy > 7 else self.chessboard.get(cx, cy + 1)
         ]
         mneight = [
-            0 if x < 1 else self.chessboard.getMap(x - 1, y),
-            0 if x > 7 else self.chessboard.getMap(x + 1, y),
-            0 if y < 1 else self.chessboard.getMap(x, y - 1),
-            0 if y > 7 else self.chessboard.getMap(x, y + 1),
-            self.chessboard.getMap(x, y)
+            0 if cx < 1 else self.chessboard.getMap(cx - 1, cy),
+            0 if cx > 7 else self.chessboard.getMap(cx + 1, cy),
+            0 if cy < 1 else self.chessboard.getMap(cx, cy - 1),
+            0 if cy > 7 else self.chessboard.getMap(cx, cy + 1),
+            self.chessboard.getMap(cx, cy)
         ]
-        neight = [ (eneight[i] and np.sign(eneight[i]) != elSign) or (mneight[4] != 2 and mneight[i] in nocc) for i in range(4) ]
+        neight = [ (eneight[i] and np.sign(eneight[i]) != elSign) or (mneight[4] != ChessBoard.CAMP and mneight[i] in ChessBoard.WALLS) for i in range(4) ]
 
-        isKing = current == 2
+        isKing = current == ChessBoard.KING
         vSupp = neight[0] and neight[1]
         hSupp = neight[2] and neight[3]
+
+        vAtk = vSupp and vCheck
+        hAtk = hSupp and hCheck
+
         if not isKing:
-            if vSupp or hSupp:
-                if eat: self.eat(x, y)
+            if vAtk or hAtk:
+                if eat: self.eat(cx, cy)
                 return current
         else:
-            isNearCastle = 4 in mneight
-            if (isNearCastle and vSupp and hSupp) or (not isNearCastle and (vSupp or hSupp)):
+            isNearCastle = ChessBoard.CASTLE in mneight
+            if (isNearCastle and vSupp and hSupp) or (not isNearCastle and (vAtk or hAtk)):
                 return current
-        return 0
+        
+        return ChessBoard.VOID
 
     def checkRange(self, start, end, x, y):
         if start == end: return True
@@ -151,8 +163,7 @@ class TablutGame:
         for v in range(1, abs(d)):
             a = self.chessboard.get(i + v * e, j)
             b = self.chessboard.get(j, i + v * e)
-            if x == -1 and a or  y == -1 and b:
-                return False
+            if x == -1 and a or  y == -1 and b: return False
         return True
 
     def checkRangeMap(self, start, end, x, y, sm):
@@ -161,10 +172,7 @@ class TablutGame:
         i = start
         d = end - start
         e = np.sign(d)
-        occ = (4, ) if sm == 2 else (2, 4)
+        walls = (ChessBoard.CASTLE, ) if sm == ChessBoard.CAMP else ChessBoard.WALLS
         for v in range(1, abs(d)):
-            a = self.chessboard.getMap(i + v * e, j)
-            b = self.chessboard.getMap(j, i + v * e)
-            if x == -1 and a in occ or  y == -1 and b in occ:
-                return False
+            if (x == -1 and self.chessboard.getMap(i + v * e, j) in walls) or  (y == -1 and self.chessboard.getMap(j, i + v * e) in walls): return False
         return True

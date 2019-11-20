@@ -1,3 +1,4 @@
+from game.ChessBoard import ChessBoard
 from game.TablutAshtonGame import TablutAshtonGame
 from game.Errors import MoveError
 from sym.TablutGui import TablutGui
@@ -24,11 +25,10 @@ class GameSym:
 
     def __play(self):
         turn = self.__game.getTurn()
-        playerString = 'BLACK' if turn else 'WHITE'
+        playerString = ChessBoard.PLAYERS[turn]
         player = self.__players[turn]
-        opponent = self.__players[(turn+1)%2]
-        if player.human() and self.__gui:
-            return self
+        opponent = self.__players[ChessBoard.PLAYERS_INDICES[turn]]
+        if player.human() and self.__gui: return self
         move = None
         try: move = player.play(self.__game, opponent)
         except MoveError as ex:
@@ -59,13 +59,11 @@ class GameSym:
             self.__won = True
             winner = self.__game.getWinner()
             
-            try:
-                self.__players[0].onWin(winner > 0, tuple(self.__moves))
+            try: self.__players[0].onWin(winner > 0, tuple(self.__moves))
             except Exception as exb:
                 if self.__verbose: print("ERRORE NELL'APPRENDIMENTO - BIANCO: ", exb)
 
-            try:
-                self.__players[1].onWin(winner < 0, tuple(self.__moves))
+            try: self.__players[1].onWin(winner < 0, tuple(self.__moves))
             except Exception as exn:
                 if self.__verbose: print("ERRORE NELL'APPRENDIMENTO - NERO: ", exn)
             
@@ -76,7 +74,7 @@ class GameSym:
         self.__gui.clear()
         self.__gui.drawTable(self.__game.getBoardIterator())
         if winner:
-            self.__gui.drawWin(0 if winner == 1 else 1)
+            self.__gui.drawWin(winner)
             self.__win()
         else:
             self.__gui.drawTurn(self.__game.getTurn())
@@ -92,6 +90,8 @@ class GameSym:
 
     def __click(self, x, y):
         if self.__won: return self
+        if not self.__players[0].human() and not self.__players[1].human(): return self
+        if x < ChessBoard.MIN or x > ChessBoard.MAX or y < ChessBoard.MIN or y > ChessBoard.MAX: return self
         if self.__selected:
             if self.__selected != (x, y):
                 try:
@@ -122,10 +122,10 @@ class GameSym:
             winner = self.__game.getWinner()
             while not winner:
                 turn = self.__game.getTurn()
-                if self.__verbose: print('TURN {}'.format('WHITE' if turn == 0 else 'BLACK'))
+                if self.__verbose: print('TURN {}'.format('WHITE' if turn == ChessBoard.WHITE_PLAYER else 'BLACK'))
                 self.__play()
                 winner = self.__game.getWinner()
-            print('THE WINNER IS: {}'.format('WHITE' if winner > 0 else 'BLACK'))
+            print('THE WINNER IS: {}'.format('WHITE' if winner == ChessBoard.WHITE_PLAYER else 'BLACK'))
             self.__win()
 
         return self
