@@ -15,8 +15,9 @@ class TablutGame:
     def getPawn(self, x, y): return self.chessboard.get(x, y)
     def getWinner(self): return self.won
     def __str__(self): return str(self.__chessboard)
-    def clone(self, turn = 0):
+    def clone(self, turn = None):
         result = self.__class__(self.getBoard())
+        if turn is None: turn = self.turn
         result.turn = turn
         return result
 

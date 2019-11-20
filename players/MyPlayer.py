@@ -45,7 +45,7 @@ class MyPlayer(Player):
                 return current.euristic(state.getBoard())
             v = inf
             for a in opponent.actions(state):
-                v = min(v, max_value(state.result(*a, myTurn), alpha, beta, depth + 1))
+                v = min(v, max_value(state.result(*a, opponentTurn), alpha, beta, depth + 1))
                 if v <= alpha:
                     return v
                 beta = min(beta, v)
@@ -61,11 +61,12 @@ class MyPlayer(Player):
         best_action = None
         myTurn = 0 if self.isWhite() else 1
         opponentTurn = 0 if opponent.isWhite() else 1
-        for a in current.actions(game):
-            v = min_value(game.result(*a, myTurn), best_score, beta,1)
+        for move in current.actions(game):
+            currentState = game.result(*move, myTurn)
+            v = min_value(currentState, best_score, beta,1)
             if v > best_score:
                 best_score = v
-                best_action = a
+                best_action = move
         return best_action
 
 
