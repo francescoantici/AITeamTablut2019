@@ -2,6 +2,7 @@ from game.ChessBoard import ChessBoard
 from game.TablutAshtonGame import TablutAshtonGame
 from game.Errors import MoveError
 from sym.TablutGui import TablutGui
+from time import time
 
 
 class GameSym:
@@ -26,11 +27,15 @@ class GameSym:
     def __play(self):
         turn = self.__game.getTurn()
         playerString = ChessBoard.PLAYERS[turn]
-        player = self.__players[turn]
-        opponent = self.__players[ChessBoard.PLAYERS_INDICES[turn]]
+        player = self.__players[ChessBoard.PLAYERS_INDICES[turn]]
+        opponent = self.__players[ChessBoard.PLAYERS_INDICES[-turn]]
         if player.human() and self.__gui: return self
         move = None
-        try: move = player.play(self.__game, opponent)
+        try:
+            startTime = time()
+            move = player.play(self.__game, opponent)
+            diffTime = time() - startTime
+            if self.__verbose: print('MOSSA CALCOLATA IN: {} s'.format(diffTime))
         except MoveError as ex:
             player.onError('move', ex)
             if self.__verbose: print("ERRORE NEL CALCOLO DELLA MOSSA - " + playerString + ": ", ex, ex.__class__.__name__);

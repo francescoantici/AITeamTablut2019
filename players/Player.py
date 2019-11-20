@@ -1,3 +1,5 @@
+from game.ChessBoard import ChessBoard
+
 class Player:
     def __init__(self, isWhite = False, human = False):
         self.__human = human
@@ -9,6 +11,7 @@ class Player:
     def move(self, game, chessboard, opponent): raise NotImplementedError
     def onWin(self, winner, moves): print(winner, moves); return self
     def onError(self, type, error): return self
+    def turn(self): return ChessBoard.WHITE_PLAYER if self.__isWhite else ChessBoard.BLACK_PLAYER
 
     def actions(self, game, chessboard = None):
         L=[]

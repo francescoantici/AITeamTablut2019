@@ -7,44 +7,9 @@ class RandomPlayer(Player):
     
     def move(self, game, chessboard, opponent):
         elSign = 1 if self.isWhite() else -1
-        act = []
-        for row in chessboard:
-            for pawn in row:
-                if np.sign(pawn.value) != elSign: continue
-                act.append((pawn.x, pawn.y, self.__getMoves(pawn, chessboard)))
-
+        act = self.actions(game, chessboard)
         np.random.shuffle(act)
-        act = act[0]
-        np.random.shuffle(act[2])
-        return ((act[0], act[1]), (act[2][0][0], act[2][0][1]))
-    
-    def __getMoves(self, pawn, chessboard):
-        M = []
-        for i in range(1, 9):
-            xi = pawn.x + i
-            if xi >= 0 and xi <= 8:
-                if chessboard[xi][pawn.y].value == 0: M.append((xi, pawn.y))
-                else: break
-
-        for i in range(1, 9):
-            xi = pawn.x - i
-            if xi >= 0 and xi <= 8:
-                if chessboard[xi][pawn.y].value == 0: M.append((xi, pawn.y))
-                else: break
-
-        for i in range(1, 9):
-            yi = pawn.y + i
-            if yi >= 0 and yi <= 8:
-                if chessboard[pawn.x][yi].value == 0: M.append((pawn.x, yi))
-                else: break
-        
-        for i in range(1, 9):
-            yi = pawn.y - i
-            if yi >= 0 and yi <= 8:
-                if chessboard[pawn.x][yi].value == 0: M.append((pawn.x, yi))
-                else: break
-
-        return M
+        return act[0]
 
     def onWin(self, winner, moves):
         if winner:

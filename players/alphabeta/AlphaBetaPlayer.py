@@ -23,9 +23,8 @@ class AlphaBetaPlayer(Player):
         if self.cutoff(state, depth, currentMove):
             return opponent.euristic(state, currentMove, depth) if hasattr(opponent, 'euristic') else inf
         v = -inf
-        L = self.actions(state)
-        for move in L:
-            currentState = state.result(*move, False, myTurn)
+        for move in self.actions(state):
+            currentState = state.result(*move, True, myTurn)
             v = max(v, self.min_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move))
             if v >= beta:
                 return v
@@ -36,33 +35,23 @@ class AlphaBetaPlayer(Player):
         if self.cutoff(state, depth, currentMove):
             return self.euristic(state, currentMove, depth)
         v = inf
-        L = opponent.actions(state)
-        for move in L:
-            currentState = state.result(*move, False, opponentTurn)
+        for move in opponent.actions(state):
+            currentState = state.result(*move, True, opponentTurn)
             v = min(v, self.max_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move))
             if v <= alpha:
                 return v
             beta = min(beta, v)
         return v
 
-    def alphabeta_cutoff(self,game, opponent):
-        """Search game to determine best action; use alpha-beta pruning.
-        This version cuts off search and uses an evaluation function."""
-
-        # Body of alphabeta_cutoff_search starts here:
-        # The default test cuts off at depth d or at a terminal state
-        d = self.depth
+    def alphabeta_cutoff(self, game, opponent):
         best_score = -inf
         beta = inf
         best_action = None
-        myTurn = 0 if self.isWhite() else 1
-        opponentTurn = 0 if opponent.isWhite() else 1
-        L = self.actions(game)
-        M = []
-        for move in L:
-            currentState = game.result(*move, False, myTurn)
+        myTurn = self.turn()
+        opponentTurn = -myTurn
+        for move in self.actions(game):
+            currentState = game.result(*move, True)
             v = self.min_value(currentState, best_score, beta, 1, opponent, myTurn, opponentTurn, move)
-            M.append((*move, v))
             if v > best_score:
                 best_score = v
                 best_action = move
