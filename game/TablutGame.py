@@ -21,14 +21,14 @@ class TablutGame:
         result.turn = turn
         return result
 
-    def result(self, start, end, turn = 0): return self.clone(turn).move(start, end)
+    def result(self, start, end, checkMove = True, turn = None): return self.clone(turn).move(start, end, checkMove)
 
-    def move(self, start, end):
+    def move(self, start, end, checkMove = True):
         if self.won: raise WonGameMove(start, end)
 
         if start[0] < 0 or start[1] < 0 or end[0] < 0 or end[1] < 0 or start[0] > 8 or start[1] > 8 or end[0] > 8 or end[1] > 8: raise OutOfBoardMove(start, end)
 
-        self.checkMove(start, end)
+        if checkMove: self.checkMove(start, end)
         s = self.chessboard.get(*start)
 
         self.chessboard.set(start[0], start[1], 0)
