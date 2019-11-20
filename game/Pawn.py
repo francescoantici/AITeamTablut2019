@@ -14,6 +14,6 @@ class Pawn:
 
 
         self.camp = self.map == 2
-        self.king = self.map == 4
+        self.castle = self.map == 4
         self.escape = self.map == 1
         self.block = self.camp or self.king

@@ -24,28 +24,30 @@ class GameSym:
 
     def __play(self):
         turn = self.__game.getTurn()
+        playerString = 'BLACK' if turn else 'WHITE'
         player = self.__players[turn]
         opponent = self.__players[(turn+1)%2]
-        if player.human() and self.__gui: return self
+        if player.human() and self.__gui:
+            return self
         move = None
         try: move = player.play(self.__game, opponent)
         except MoveError as ex:
             player.onError('move', ex)
-            if self.__verbose: print("ERRORE NEL CALCOLO DELLA MOSSA: ", ex, ex.__class__.__name__);
+            if self.__verbose: print("ERRORE NEL CALCOLO DELLA MOSSA - " + playerString + ": ", ex, ex.__class__.__name__);
             return self
         except Exception as ex:
             player.onError('calculation', ex)
-            if self.__verbose: print("ERRORE NEL CALCOLO MOSSA: ", ex)
+            if self.__verbose: print("ERRORE NEL CALCOLO MOSSA - " + playerString + ": ", ex)
             return self
 
         try: self.move(*move)
         except MoveError as ex:
             player.onError('move', ex)
-            if self.__verbose: print("MOSSA ERRATA: ", ex, ex.__class__.__name__);
+            if self.__verbose: print("MOSSA ERRATA - " + playerString + ": ", ex, ex.__class__.__name__);
             return self
         except Exception as ex:
             player.onError('execution', ex)
-            if self.__verbose: print("ERRORE NELL'ESECUZIONE MOSSA: ", ex);
+            if self.__verbose: print("ERRORE NELL'ESECUZIONE MOSSA - " + playerString + ": ", ex);
             return self
 
         self.__moves.append(move)

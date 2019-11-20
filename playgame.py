@@ -14,7 +14,7 @@ enable_attach(address=('localhost', 5678))
 
 
 white = PlayerWhite(2)
-black = PlayerBlack(2)
+black = HumanPlayer(False)
 
 sym = GameSym(white, black)
 
