@@ -3,7 +3,7 @@ from players.alphabeta.AlphaBetaPlayer import AlphaBetaPlayer
 import numpy as np
 
 class PlayerWhite(AlphaBetaPlayer):
-    def __init__(self, depth): super().__init__(True, depth)
+    def __init__(self, depth, timer = 50, verbose = False): super().__init__(True, depth, timer, verbose)
 
     def euristic(self, state, move, depth):
 
@@ -19,7 +19,8 @@ class PlayerWhite(AlphaBetaPlayer):
         for row in chessboard:
             for pawn in row:
                 ##pedina avversaria o cella vuota
-                if pawn.empty or pawn.black:
+                if pawn.empty: continue
+                if pawn.black:
                     blackF -= 1
                     continue
                 
@@ -27,7 +28,8 @@ class PlayerWhite(AlphaBetaPlayer):
 
                 ##pedina bianca
                 #vicini pericolosi
-                pawnDangerF = -self.danger(chessboard, pawn)
+                dangerTuple = self.danger(chessboard, pawn)
+                pawnDangerF = -(dangerTuple[0] + dangerTuple[1])
 
                 #re
                 if pawn.king:
@@ -64,7 +66,7 @@ class PlayerWhite(AlphaBetaPlayer):
             r = int(chessboard[pawn.x + 1][pawn.y].black or ChessBoard.MAP[pawn.x + 1][pawn.y] in ChessBoard.WALLS)
         if pawn.y < 8:
             d = int(chessboard[pawn.x][pawn.y + 1].black or ChessBoard.MAP[pawn.x][pawn.y + 1] in ChessBoard.WALLS)
-        return l + d + u + r
+        return (l + d, u + r)
 
     def blocked(self, chessboard, pawn):
         l = 0

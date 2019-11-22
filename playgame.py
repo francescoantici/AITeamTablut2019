@@ -6,13 +6,14 @@ from players.HumanPlayer import HumanPlayer
 from sym.GameSym import GameSym
 from ptvsd import enable_attach, wait_for_attach
 
-# debug vs code
-enable_attach(address=('localhost', 5678))
-# attendi debugger
-# print("Aspettando il debugger"); wait_for_attach()
+enable_attach(address=('localhost', 5678)) # debug vs code
+# print("Aspettando il debugger"); wait_for_attach() # attendi debugger
 
-white = PlayerWhite(2)
-black = HumanPlayer(False)
+white = RandomWhitePlayer()
+# white = PlayerWhite(2, 40)
+# black = HumanPlayer(False)
+# white = HumanPlayer(True)
+black = PlayerBlack(2, 40)
 
 sym = GameSym(white, black)
 

@@ -35,7 +35,7 @@ class GameSym:
             startTime = time()
             move = player.play(self.__game, opponent)
             diffTime = time() - startTime
-            if self.__verbose: print('MOSSA CALCOLATA IN: {} s'.format(diffTime))
+            if self.__verbose: print('MOSSA {} CALCOLATA IN: {} s - {} -> {}'.format(playerString, diffTime, *move))
         except MoveError as ex:
             player.onError('move', ex)
             if self.__verbose: print("ERRORE NEL CALCOLO DELLA MOSSA - " + playerString + ": ", ex, ex.__class__.__name__);

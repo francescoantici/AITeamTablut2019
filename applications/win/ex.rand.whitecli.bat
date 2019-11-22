@@ -1,0 +1,1 @@
+java -cp Tablut2019.jar it.unibo.ai.didattica.competition.tablut.client.TablutRandomWhiteClient
