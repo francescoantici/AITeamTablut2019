@@ -51,3 +51,4 @@ class SocketClient:
                 return None
             data.extend(packet)
         return data
+
