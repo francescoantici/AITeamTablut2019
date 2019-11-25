@@ -8,9 +8,9 @@ from game.ChessBoard import ChessBoard
 #C.read()
 
 
-def ChessBoardParsing(D):
+""" def ChessBoardParsing(D):
     Parser={"WHITE":ChessBoard.WHITE_PAWN,"BLACK":ChessBoard.BLACK_PAWN,"EMPTY":ChessBoard.VOID,"KING":ChessBoard.KING}
-    chessboard=np.zeros((9,9))
+    chessboard=np.zeros((9,9),dtype="byte")
     L=D["board"]
     for i in range(len(L)):
         row=L[i]
@@ -30,4 +30,4 @@ L={"board":[["WHITE","BLACK","EMPTY","KING","WHITE","BLACK","EMPTY","KING","EMPT
             ["WHITE","BLACK","EMPTY","KING","WHITE","BLACK","EMPTY","KING","EMPTY"]]}
 
 g=ChessBoardParsing(L)
-print(g)
+print(g) """

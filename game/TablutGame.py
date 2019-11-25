@@ -178,4 +178,12 @@ class TablutGame:
         return True
 
     def parseState(self, state):
-        pass
+        
+        Parser={"WHITE":ChessBoard.WHITE_PAWN,"BLACK":ChessBoard.BLACK_PAWN,"EMPTY":ChessBoard.VOID,"KING":ChessBoard.KING}
+        chessboard=np.zeros((9,9),dtype="byte")
+        L=state["board"]
+        for i in range(len(L)):
+            row=L[i]
+            chessboard[i,:]=[Parser[j] for j in row]
+        self.chessboard=ChessBoard(chessboard)
+        return self
