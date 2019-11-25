@@ -176,3 +176,6 @@ class TablutGame:
         for v in range(1, abs(d)):
             if (x == -1 and self.chessboard.getMap(i + v * e, j) in walls) or  (y == -1 and self.chessboard.getMap(j, i + v * e) in walls): return False
         return True
+
+    def parseState(self, state):
+        pass

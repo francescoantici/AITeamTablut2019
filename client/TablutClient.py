@@ -1,6 +1,9 @@
 from client.SocketClient import SocketClient
 
 class TablutClient(SocketClient):
+
+    LETTERS = ('A','B','C','D','E','F','G','H','I')
+
     def __init__(self, port = 80, host = 'localhost', isWhite = True):
         super().__init__(port, host)
         self.__isWhite = isWhite
@@ -14,6 +17,11 @@ class TablutClient(SocketClient):
     def sendAction(self, fromTile, toTile):
         self.send({ "from": fromTile, "to": toTile })
         return self
+
+    def sendMove(self, move):
+        fromTile = move[0]
+        toTile = move[1]
+        return self.send(TablutClient.LETTERS[fromTile[0]] + str(fromTile[1]), TablutClient.LETTERS[toTile[0]] + str(toTile[1]))
 
     def readState(self):
         while self.__state is None or self.__state['turn'] != self.__myState:
