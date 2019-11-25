@@ -1,0 +1,1 @@
+TABLUT CHALLENGE 2019 AITeamEXECUTION>>  python3 AITeam.py [role:White/Black=White] [Timeout:int=60] [serveripaddress=localhost:5800/5801]INSTALLpip install numpy pip install pillowpip install ptvsd (debug)
