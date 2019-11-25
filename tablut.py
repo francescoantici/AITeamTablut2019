@@ -2,12 +2,15 @@ from game.TablutAshtonGame import TablutAshtonGame
 from client.WhiteClient import WhiteClient
 from client.BlackClient import BlackClient
 from game.TablutAshtonGame import TablutAshtonGame
+from sym.TablutGui import TablutGui
 
 from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
 from players.alphabeta.PlayerWhite import PlayerWhite
 from players.alphabeta.PlayerBlack import PlayerBlack
 from players.HumanPlayer import HumanPlayer
 
+from time import time
+import socket
 import sys
 
 print('=======================')
@@ -33,22 +36,30 @@ serverl = len(server)
 serverHost = server[0] if serverl > 0 else 'localhost'
 serverPort = server[1] if serverl > 1 else None
 
-client = WhiteClient(serverPort, serverHost) if isWhite else BlackClient(serverPort, serverHost)
+CLIENT_CLASS = WhiteClient if isWhite else BlackClient
+client = CLIENT_CLASS(serverPort, serverHost)
 white = WHITE_CLASS(DEPTH, timeout - 10, False)
 black = BLACK_CLASS(DEPTH, timeout - 10, False)
 player = white if isWhite else black
 opponent = black if isWhite else white
 game = TablutAshtonGame()
 
-print("\tROLE: {}\n\tTIMEOUT: {}\n\tHOST: {}\n\tPORT: {}".format('White' if isWhite else 'Black', timeout, serverHost, serverPort))
+print("\tROLE: {}\n\tTIMEOUT: {}\n\tHOST: {}\n\tPORT: {}".format('White' if isWhite else 'Black', timeout, serverHost, serverPort if serverPort else 'DEFAULT'))
 
 ### ===== CONNESSIONE AL SERVER ====== ###
-print("\n*** CONNECTION TO SERVER ***")
-client.connect()
+connected = False
+while not connected:
+    try:
+        print("\n*** TRYING TO CONNECT TO SERVER ***")
+        client.connect()
+        connected = True
+    except Exception as ex:
+        print('### ERROR: {} ###'.format(ex))
+        connected = False
+
 print("*** CONNECTED ***")
 client.declarePlayerName(TEAM_NAME)
 print("*** SENDING PLAYER NAME: {} ***\n".format(TEAM_NAME))
-
 
 ### ====== CICLO DI GIOCO ====== ###
 while True:
@@ -58,7 +69,14 @@ while True:
         print('# PARSING STATE #')
         game.parseState(state)
         print('# COMPUTING MOVE #')
+        start = time()
         move = player.play(game, opponent)
-        print('*** SENDING MOVE ***')
+        print('# COMPUTED IN {} s #'.format(start - time()))
+        print('*** SENDING MOVE: {} - {} ***'.format(move, client.parseMove(move)))
         client.sendMove(move)
-    except: continue
+    except socket.error as ex:
+        print("#### ERROR: {} ###".format(ex))
+        break
+    except Exception as ex:
+        print("#### ERROR: {} ###".format(ex))
+        continue

@@ -19,11 +19,15 @@ class TablutClient(SocketClient):
         return self
 
     def sendMove(self, move):
+        return self.sendAction(*self.parseMove(move))
+
+    def parseMove(self, move):
         fromTile = move[0]
         toTile = move[1]
-        return self.send(TablutClient.LETTERS[fromTile[0]] + str(fromTile[1]), TablutClient.LETTERS[toTile[0]] + str(toTile[1]))
+        return TablutClient.LETTERS[fromTile[0]] + str(fromTile[1]+1), TablutClient.LETTERS[toTile[0]] + str(toTile[1]+1)
 
     def readState(self):
+        self.__state = None
         while self.__state is None or self.__state['turn'] != self.__myState:
             self.__state = self.read()
         return self.__state
