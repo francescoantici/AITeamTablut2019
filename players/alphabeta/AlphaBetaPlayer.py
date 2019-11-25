@@ -25,38 +25,26 @@ class AlphaBetaPlayer(Player):
     def cutoff(self, state, depth, move):
         return depth > self.depth or state.checkWin(move)
     
-    def max_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove, parents):
-        self.printMossa(parents)
+    def max_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove):
         if self.cutoff(state, depth, currentMove):
-            # return inf
-            # return self.euristic(state, currentMove, depth)
             return opponent.euristic(state, currentMove, depth) if hasattr(opponent, 'euristic') else inf
         v = -inf
-        L = self.actions(state)
-        Ll = len(L)
-        i = 0
-        for move in L:
+        for move in self.shuffle(self.actions(state)):
             if self.now() >= self.timer: break
-            i += 1
             currentState = state.result(*move, True, myTurn)
-            v = max(v, self.min_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move, [*parents, (i, Ll)]))
+            v = max(v, self.min_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move))
             if v >= beta: return v
             alpha = max(alpha, v)
         return v
 
-    def min_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove, parents):
-        self.printMossa(parents)
+    def min_value(self, state, alpha, beta, depth, opponent, myTurn, opponentTurn, currentMove):
         if self.cutoff(state, depth, currentMove):
             return self.euristic(state, currentMove, depth)
         v = inf
-        L = opponent.actions(state)
-        Ll = len(L)
-        i = 0
-        for move in L:
+        for move in self.shuffle(opponent.actions(state)):
             if self.now() >= self.timer: break
-            i += 1
             currentState = state.result(*move, True, opponentTurn)
-            v = min(v, self.max_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move, [*parents, (i, Ll)]))
+            v = min(v, self.max_value(currentState, alpha, beta, depth + 1, opponent, myTurn, opponentTurn, move))
             if v <= alpha: return v
             beta = min(beta, v)
         return v
@@ -67,22 +55,20 @@ class AlphaBetaPlayer(Player):
         best_action = None
         myTurn = self.turn()
         opponentTurn = -myTurn
-        L = self.actions(game)
-        Ll = len(L)
-        M = []
-        i = 0
         self.__startTime = time.time()
         self.now()
-        for move in L:
+        for move in self.shuffle(self.actions(game)):
             if self.now() >= self.timer: break
-            i += 1
             currentState = game.result(*move, True)
-            v = self.min_value(currentState, best_score, beta, 1, opponent, myTurn, opponentTurn, move, [(i, Ll)])
-            M.append((move, v))
+            v = self.min_value(currentState, best_score, beta, 1, opponent, myTurn, opponentTurn, move)
             if v > best_score:
                 best_score = v
                 best_action = move
         return best_action
+
+    def shuffle(self, array):
+        np.random.shuffle(array)
+        return array
 
     def printMossa(self, parents):
         if self.verbose:

@@ -4,3 +4,4 @@ test.*.py
 models
 __pycache__
 players/NNPlayer.py
+logs

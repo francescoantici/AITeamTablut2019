@@ -63,20 +63,20 @@ print("*** SENDING PLAYER NAME: {} ***\n".format(TEAM_NAME))
 
 ### ====== CICLO DI GIOCO ====== ###
 while True:
-    try:
-        print('*** READING STATE ***')
-        state = client.readState()
-        print('# PARSING STATE #')
-        game.parseState(state)
-        print('# COMPUTING MOVE #')
-        start = time()
-        move = player.play(game, opponent)
-        print('# COMPUTED IN {} s #'.format(time() - start))
-        print('*** SENDING MOVE: {} - {} ***'.format(move, client.parseMove(move)))
-        client.sendMove(move)
-    except socket.error as ex:
-        print("#### ERROR: {} ###".format(ex))
-        break
-    except Exception as ex:
-        print("#### ERROR: {} ###".format(ex))
-        continue
+    # try:
+    print('*** READING STATE ***')
+    state = client.readState()
+    print('# PARSING STATE #')
+    game.parseState(state)
+    print('# COMPUTING MOVE #')
+    start = time()
+    move = player.play(game, opponent)
+    print('# COMPUTED IN {} s #'.format(time() - start))
+    print('*** SENDING MOVE: {} - {} ***'.format(move, client.parseMove(move)))
+    client.sendMove(move)
+    # except socket.error as ex:
+    #     print("#### ERROR: {} ###".format(ex))
+    #     break
+    # except Exception as ex:
+    #     print("#### ERROR: {} ###".format(ex))
+    #     continue
