@@ -71,7 +71,7 @@ while True:
         print('# COMPUTING MOVE #')
         start = time()
         move = player.play(game, opponent)
-        print('# COMPUTED IN {} s #'.format(start - time()))
+        print('# COMPUTED IN {} s #'.format(time() - start))
         print('*** SENDING MOVE: {} - {} ***'.format(move, client.parseMove(move)))
         client.sendMove(move)
     except socket.error as ex:
