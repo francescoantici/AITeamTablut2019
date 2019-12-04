@@ -2,7 +2,6 @@ from game.TablutAshtonGame import TablutAshtonGame
 from client.WhiteClient import WhiteClient
 from client.BlackClient import BlackClient
 from game.TablutAshtonGame import TablutAshtonGame
-from sym.TablutGui import TablutGui
 
 from players.RandomPlayer import RandomWhitePlayer, RandomBlackPlayer
 from players.alphabeta.PlayerWhite import PlayerWhite
