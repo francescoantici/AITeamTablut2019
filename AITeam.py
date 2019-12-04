@@ -19,7 +19,7 @@ print('=======================')
 print('=======================')
 
 ### ===== IMPOSTAZIONI ====== ###
-TEAM_NAME = 'TEAM_NAME'
+TEAM_NAME = 'AITEAM'
 WHITE_CLASS = PlayerWhite
 BLACK_CLASS = PlayerBlack
 DEPTH = 2
